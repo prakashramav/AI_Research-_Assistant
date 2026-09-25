@@ -1,224 +1,186 @@
 # Synthesia — AI Research Assistant
 
-A full-stack, autonomous research application that transforms open-ended questions into comprehensive, multi-source editorial synthesis reports with inline citations, source comparison matrices, and contradiction mapping — paired with grounded RAG follow-up inquiry.
+> An autonomous, multi-source research engine that turns complex topics into structured, editorial-grade research reports with verifiable citations, source comparisons, contradiction mapping, and grounded RAG follow-up.
 
 ---
 
-## Key Features
+## Why I Built This (The Problem)
 
-- **Document-like Editorial Reports**: Generous line-height, curated academic typography (Lora & Inter), warm off-white palette, and clear structural sections.
-- **Query Planning Engine**: Breaks topics into 3–6 distinct, targeted research vectors rather than searching verbatim queries.
-- **Parallel Multi-Source Search**: Concurrent querying with domain/URL deduplication. Configurable for Tavily, Serper, Bing, or offline Mock Mode.
-- **Automated Text Extraction**: Cleans HTML bodies, strips boilerplate and scripts, and normalizes text into overlapping semantic fragments.
-- **Local Vector Store for RAG**: High-precision semantic vector retrieval running locally without paid vector database infrastructure. Extensible base interface makes swapping in Pinecone or Weaviate a one-file change.
-- **Server-Sent Events (SSE)**: Real-time streaming progress timeline showing actual sub-queries and collection statistics instead of a blank spinner.
-- **Interactive Superscript Citations**: Hoverable cards and side drawers for citations (e.g., `[1]`, `[2]`) showing source snippet, author/publisher, accessed date, and outbound links.
-- **Source Comparison & Stance Matrix**: Compact structured comparison of institutional stances, methodological biases, and credibility notes.
-- **Contradictions & Open Debates**: Identifies tensions and conflicting empirical findings across sources (Perspective Alpha vs. Perspective Beta).
-- **Grounded Follow-Up Q&A**: Answers follow-up inquiries strictly from retrieved source chunks with inline citations, refusing to speculate without evidence.
-- **Research Library**: Persistent SQLite database storing past sessions, sources, chunks, and chat history.
+Whenever you use current AI chatbots (ChatGPT, Perplexity, Claude) or standard search engines for serious research, you quickly hit three fundamental walls:
+
+1. **The Single-Query Trap**: Asking a chatbot a nuanced question like *"What are the real-world failure modes and economics of autonomous coding agents?"* usually triggers a single search query with whatever phrasing you typed. Real research doesn't work that way. A human researcher breaks a topic down into architectural benchmarks, cost models, counter-arguments, and empirical studies.
+2. **Hallucinated or Vague Citations**: Most AI tools output text with generic links or citations that don't actually support the specific claim being made. You end up having to re-verify every sentence manually.
+3. **Ignoring Contradictions**: Different academic papers and industry reports disagree. Most AI summaries smooth over disagreements into a bland, agreeable compromise rather than explicitly surfacing where and why the experts disagree.
+4. **The "Chat Bubble Soup" UI**: Research isn't a back-and-forth chat conversation. It’s an editorial document that deserves proper typography, clear evidence blocks, comparison tables, and a quiet space to interrogate the findings.
+
+---
+
+## What This Solves
+
+Synthesia is designed to behave like a diligent research analyst:
+
+- **Breaks queries down strategically**: It never searches your prompt verbatim. It formulates 3–6 distinct research sub-queries spanning technical mechanisms, benchmarks, trade-offs, and counter-perspectives.
+- **Synthesizes multiple primary sources**: Searches across parallel streams, extracts clean article text (stripping ads and boilerplate), chunks the content, and embeds it into a local vector store.
+- **Explicitly surfaces contradictions**: Identifies tensions in the literature (*Perspective Alpha vs. Perspective Beta*) so you can see where sources disagree.
+- **Verifiable superscript citations**: Every key finding and piece of evidence links directly to a source with small superscript numbers (`[1]`, `[2]`). Hovering over or clicking a citation opens a detailed card with the exact quote, domain, and primary link.
+- **Strictly grounded follow-up Q&A**: Once a report is generated, you can ask follow-up questions at the bottom of the page. The backend queries the session's vector store and answers strictly from the retrieved text, refusing to speculate without evidence.
+- **Research Library**: All sessions are persisted to SQLite and browsable in a sidebar like a personal research archive.
+
+---
+
+## How It Works (Under the Hood)
+
+Here is the 5-stage pipeline executing behind every research request:
+
+```
+[ User Prompt ]
+       │
+       ▼
+1. Query Planning ───────► Claude breaks topic into 3-6 targeted sub-queries
+       │
+       ▼
+2. Multi-Source Search ──► Parallel searches (Tavily/Serper/Bing) + URL deduplication
+       │
+       ▼
+3. Extraction & Chunking ─► Cleans HTML body, strips boilerplate, chunks text
+       │
+       ▼
+4. Local Vector Indexing ─► TF-IDF + Cosine similarity vectors (zero paid infra)
+       │
+       ▼
+5. Structured Synthesis ──► Claude generates strict JSON report (Consensus, Key Findings,
+       │                    Stance Matrix, Evidence, Contradictions, References)
+       ▼
+[ Editorial Report & Grounded RAG Chat ]
+```
+
+### 1. Query Planning
+Instead of searching your raw sentence, the LLM analyzes the topic and decomposes it into distinct angles:
+- *Core definitions and current state-of-the-art*
+- *Empirical benchmarks and real-world metrics*
+- *Trade-offs, failure modes, and open debates*
+- *Economic, legal, or policy implications*
+
+### 2. Multi-Source Search & Deduplication
+The planned queries execute concurrently against the search provider (Tavily, Serper, or Bing). Results are filtered and deduplicated by normalized domain and URL so you don't get redundant hits.
+
+### 3. Boilerplate Stripping & Extraction
+Raw HTML pages are parsed with BeautifulSoup to strip out navigation menus, scripts, ads, and footers. The clean body text is truncated to a reasonable token budget and sliced into overlapping semantic chunks.
+
+### 4. Zero-Cost Local Vector Storage
+Rather than requiring paid Pinecone, Weaviate, or OpenAI embedding infrastructure, the app implements a local vector store using `scikit-learn`'s TF-IDF vectorizer and cosine similarity. It runs entirely on your local machine, persists to disk, and automatically rehydrates from SQLite if needed. 
+*(If you do want to plug in Pinecone or Weaviate later, the base class `BaseVectorStore` makes it a one-file change).*
+
+### 5. Structured JSON Synthesis
+The extracted sources are fed to Claude with strict instructions to output structured JSON adhering to an exact schema (Executive Summary, Key Findings, Source Comparison Matrix, Evidence, Contradictions, and Bibliography). This allows the frontend to render distinct, readable components rather than a wall of markdown.
+
+### 6. Real-Time Streaming via Server-Sent Events (SSE)
+Instead of showing a generic loading spinner, the app opens an SSE stream (`/api/research/{session_id}/events`). You see the actual sub-queries being generated, which sources are being read, and the real percentage progress.
+
+---
+
+## Design Philosophy
+
+To avoid the generic *"purple gradient AI dashboard"* look, the interface is designed like an editorial academic piece:
+- **Palette**: Warm off-white canvas (`#fbf9f5`), charcoal text (`#1c1b18`), quiet stone borders, and deep terracotta ink accents.
+- **Typography**: Editorial serif headings (`Lora`) paired with crisp, readable body text (`Inter`).
+- **Layout**: A readable ~760px column for the report body, with generous line heights and distinct visual sections for key findings, evidence quotes, and source comparison tables.
+- **Citation Interactions**: Clickable superscript numbers (`[1]`, `[2]`) that open hover cards or slide-over drawers with full excerpt text and source links.
 
 ---
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| **Frontend** | Next.js 14+ (App Router, JavaScript, Tailwind CSS, Lucide Icons) |
-| **Backend** | FastAPI (Python 3.10+ / async endpoints, BackgroundTasks, SSE) |
-| **LLM** | Anthropic Claude API (`claude-3-5-sonnet-20241022`) + Offline Mock Engine |
-| **Search** | Tavily / Serper / Bing Web Search (configurable via `.env`) |
-| **Vector Store** | Local TF-IDF Vectorizer + Cosine Similarity (`BaseVectorStore` interface) |
-| **Database** | SQLite via SQLAlchemy (`ResearchSession`, `ResearchSource`, `ResearchChunk`, `ChatMessage`) |
+| Layer | Technology | Purpose |
+|---|---|---|
+| **Frontend** | Next.js 14+ (App Router, JavaScript) | Editorial document UI, SSE streaming listener, interactive citation popovers |
+| **Styling** | Tailwind CSS | Custom warm editorial palette & responsive layouts |
+| **Backend** | FastAPI (Python) | Async endpoints, `BackgroundTasks`, and SSE `StreamingResponse` |
+| **LLM** | Anthropic Claude API (`claude-3-5-sonnet-20241022`) | Query planning, report synthesis, and RAG Q&A |
+| **Search** | Tavily / Serper / Bing | Parallel web search (configurable via `.env`) |
+| **Vector Store** | Local TF-IDF + Cosine Similarity | Lightweight local vector search with no cloud dependencies |
+| **Database** | SQLite via SQLAlchemy | Storing sessions, sources, chunks, and follow-up chat messages |
 
 ---
 
-## Project Structure
+## Quickstart (Run Locally)
 
-```
-AI_Research_Assistant/
-├── backend/
-│   └── app/
-│       ├── config.py              # Environment configuration & provider detection
-│       ├── main.py                # FastAPI app, CORS, lifespan startup & seed
-│       ├── db/
-│       │   ├── database.py        # SQLAlchemy engine & session factory
-│       │   ├── models.py          # Session, Source, Chunk, and ChatMessage models
-│       │   └── seed.py            # Comprehensive exemplar report fixture
-│       ├── services/
-│       │   ├── search.py          # Tavily, Serper, Bing & mock search provider
-│       │   ├── extraction.py      # HTML parsing, boilerplate stripping, chunking
-│       │   ├── vector_store.py    # Extensible BaseVectorStore & LocalVectorStore
-│       │   ├── synthesis.py       # Claude prompt orchestration & mock synthesis
-│       │   └── orchestrator.py    # Multi-stage pipeline & SSE event broadcaster
-│       └── routers/
-│           ├── research.py        # /api/research endpoints (start, status, events, ask)
-│           └── sessions.py        # /api/sessions endpoints (list, delete)
-├── frontend/
-│   ├── app/
-│   │   ├── globals.css            # Custom editorial palette, theme tokens, fonts
-│   │   ├── layout.js              # Lora & Inter Google fonts & metadata
-│   │   ├── page.js                # Search console landing page & library preview
-│   │   ├── history/page.js        # Dedicated research archive page
-│   │   └── research/[sessionId]/  # Live SSE progress & full editorial report view
-│   ├── components/
-│   │   ├── SearchInput.js         # Scholarly search console with topic chips
-│   │   ├── ProgressTimeline.js    # Step-by-step live pipeline progress display
-│   │   ├── ReportView.js          # Master document editorial layout
-│   │   ├── ExecutiveSummary.js    # High-level synthesis with citations
-│   │   ├── KeyFindings.js         # Core theses with evidence badges
-│   │   ├── SourceComparison.js    # Institutional stance & credibility matrix
-│   │   ├── EvidenceList.js        # Verified claims & cited quotes
-│   │   ├── Contradictions.js      # Conflicting viewpoints & debates
-│   │   ├── ReferenceList.js       # Complete bibliography
-│   │   ├── CitationPopover.js     # Hoverable card for superscript citations
-│   │   ├── SourceDrawer.js        # Side drawer for inspecting full source text
-│   │   ├── FollowUpChat.js        # Grounded RAG follow-up dialogue
-│   │   └── SessionSidebar.js      # History library navigation sidebar
-│   └── lib/
-│       └── api.js                 # Frontend API client
-├── .env.example                   # Sample environment configuration
-└── README.md
+### 1. Clone & Configure Environment
+
+```bash
+git clone https://github.com/prakashramav/AI_Research-_Assistant.git
+cd AI_Research-_Assistant
 ```
 
----
-
-## Getting Started
-
-### 1. Prerequisites
-- Python 3.10+
-- Node.js 18+ and npm
-
-### 2. Environment Configuration
-Create a `.env` file in the root directory (or copy from `.env.example`):
-
+Create your `.env` file in the root directory:
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env`:
+Add your API keys in `.env`:
 ```env
-# Optional: Provide Anthropic API Key (if omitted, high-fidelity mock synthesis runs automatically)
-ANTHROPIC_API_KEY=your_anthropic_api_key_here
-
-# Optional: Provide Search API Key (Tavily, Serper, or Bing)
-SEARCH_API_KEY=your_search_api_key_here
+ANTHROPIC_API_KEY=sk-ant-api03-...
+SEARCH_API_KEY=tvly-...
 SEARCH_PROVIDER=tavily
-
-# Database & Storage
-DATABASE_URL=sqlite:///./research_assistant.db
-VECTOR_DB_PATH=./vector_store
-
-# Set to true to force offline mock execution without API calls
-MOCK_MODE=false
 ```
-
-> **Note**: If `ANTHROPIC_API_KEY` or `SEARCH_API_KEY` are not set, the app automatically enables intelligent mock fallback for testing without external API credentials.
-
----
-
-### 3. Backend Setup & Run
-
-1. Create a Python virtual environment and activate it:
-   ```bash
-   # Windows PowerShell
-   python -m venv .venv
-   .\.venv\Scripts\Activate.ps1
-
-   # macOS / Linux
-   python3 -m venv .venv
-   source .venv/bin/activate
-   ```
-
-2. Install backend dependencies:
-   ```bash
-   pip install fastapi uvicorn pydantic sqlalchemy httpx beautifulsoup4 python-dotenv anthropic numpy scikit-learn
-   ```
-
-3. Run database initialization and seeder (optional, runs automatically on backend start):
-   ```bash
-   python -m backend.app.db.seed
-   ```
-
-4. Start the FastAPI backend server:
-   ```bash
-   python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload
-   ```
-
-The backend API will be available at `http://127.0.0.1:8000`.
-- API Documentation (Swagger): `http://127.0.0.1:8000/docs`
-- Health check: `http://127.0.0.1:8000/api/health`
+*(Note: If you leave the keys empty, the app runs in intelligent **Mock Mode** so you can test all UI features and the entire pipeline without paid API keys).*
 
 ---
 
-### 4. Frontend Setup & Run
+### 2. Run the Backend (FastAPI)
 
-1. Open a new terminal and navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
+```powershell
+# 1. Create and activate a Python virtual environment:
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1    # On Windows
+# source .venv/bin/activate     # On macOS/Linux
 
-2. Install npm dependencies:
-   ```bash
-   npm install
-   ```
+# 2. Install dependencies:
+pip install -r backend/requirements.txt
 
-3. Start the Next.js development server:
-   ```bash
-   npm run dev -- -p 3000
-   ```
-
-4. Open `http://localhost:3000` in your browser.
+# 3. Start the FastAPI server on port 8000:
+python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload
+```
+*API docs will be live at `http://127.0.0.1:8000/docs`.*
 
 ---
 
-## Seeded Example Report
+### 3. Run the Frontend (Next.js)
 
-The application includes a pre-seeded, exhaustive research session:
+Open a new terminal window:
+```powershell
+cd frontend
+npm install
+npm run dev -- -p 3000
+```
+Open **`http://localhost:3000`** in your browser.
+
+---
+
+## Inspecting the Pre-Seeded Exemplar Report
+
+You don't need to burn API credits just to see how the app looks and feels. When you first launch the app, a pre-seeded, verified research session is automatically loaded:
+
 - **Topic**: *"Autonomous AI Agents in Production Software Engineering: Benchmarks, Failure Modes, and Economic Viability"*
-- **URL**: `http://localhost:3000/research/seed-production-ai-agents-2026`
-- **Features to Inspect**:
-  - Executive summary with hoverable superscript citations `[1]`, `[2]`, `[3]`.
-  - Stance comparison matrix across Princeton NLP, ACM, IEEE Software, Gartner, and Stanford CodeX.
-  - Side-by-side contradiction tensions on autonomous PR merging vs human review.
-  - Grounded RAG Q&A with pre-loaded queries and interactive inquiry.
+- **Direct Link**: `http://localhost:3000/research/seed-production-ai-agents-2026`
+- **What to try**:
+  1. Hover over the citations `[1]`, `[2]`, `[3]` in the Executive Synthesis.
+  2. Inspect the **Source Comparison Matrix** (evaluating Princeton SWE-bench, ACM, IEEE Software, Gartner, and Stanford CodeX).
+  3. Review the **Contradictions** section contrasting autonomous PR merges vs. human code review.
+  4. Scroll down to the **Inquire into Findings** box and ask: *"What causes agent reasoning failure after 45k tokens?"* to test the grounded RAG.
 
 ---
 
-## Swapping the Vector Store
+## Deployment
 
-The codebase decouples vector storage through `BaseVectorStore` in [`backend/app/services/vector_store.py`](backend/app/services/vector_store.py):
+The repository includes production Dockerfiles and a `docker-compose.yml` for turnkey deployment:
 
-```python
-class BaseVectorStore(abc.ABC):
-    @abc.abstractmethod
-    async def add_chunks(self, session_id: str, chunks: List[Dict[str, Any]]) -> None: ...
+- **Single VPS (Docker Compose)**:
+  ```bash
+  docker compose up -d --build
+  ```
+- **Cloud PaaS (Railway / Render)**:
+  - Backend: deploy with `backend/Dockerfile` and attach a persistent volume to `/app/data`.
+  - Frontend: deploy with `frontend/Dockerfile` and set `NEXT_PUBLIC_API_URL` to your backend URL.
 
-    @abc.abstractmethod
-    async def search(self, session_id: str, query: str, top_k: int = 5) -> List[Dict[str, Any]]: ...
-
-    @abc.abstractmethod
-    async def delete_session(self, session_id: str) -> None: ...
-```
-
-To switch to **Pinecone**, **Weaviate**, or **Chroma**:
-1. Implement `BaseVectorStore` in a new class (e.g. `PineconeVectorStore`).
-2. Update the singleton instance at the bottom of `vector_store.py`:
-   ```python
-   vector_store: BaseVectorStore = PineconeVectorStore(api_key=...)
-   ```
-
----
-
-## API Endpoints Reference
-
-| Method | Endpoint | Description |
-|---|---|---|
-| `POST` | `/api/research` | Initiate background research job; returns `session_id` |
-| `GET` | `/api/research/{session_id}/status` | Check stage, progress percentage, and status |
-| `GET` | `/api/research/{session_id}/events` | Server-Sent Events (SSE) stream for live step-by-step progress |
-| `GET` | `/api/research/{session_id}` | Retrieve completed structured report, sources, and messages |
-| `POST` | `/api/research/{session_id}/ask` | Grounded RAG follow-up inquiry with inline citations |
-| `GET` | `/api/sessions` | List research session history |
-| `DELETE` | `/api/sessions/{session_id}` | Delete session and purge indexed vectors |
-| `GET` | `/api/health` | Service health status and provider configuration |
+For detailed instructions, see [DEPLOYMENT.md](DEPLOYMENT.md).
