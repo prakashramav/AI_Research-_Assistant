@@ -2,6 +2,7 @@ import logging
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from backend.app.config import settings
 from backend.app.db import init_db
 from backend.app.db.seed import seed_database
@@ -30,25 +31,52 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Enable CORS for Next.js frontend
+# Robust CORS middleware allowing all origins, credentials, headers, and methods
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows localhost:3000 and any local origins
+    allow_origin_regex=r"^https?://.*",  # Matches localhost, Vercel, Render, and custom domains
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
+
+# Root endpoint returning API information and service status
+@app.get("/", tags=["system"])
+def root():
+    return {
+        "name": "Synthesia - AI Research Assistant API",
+        "status": "online",
+        "version": "1.0.0",
+        "documentation": "/docs",
+        "health": "/api/health",
+        "endpoints": {
+            "sessions": "/api/sessions",
+            "start_research": "POST /api/research",
+            "research_detail": "GET /api/research/{session_id}",
+            "research_events_sse": "GET /api/research/{session_id}/events",
+            "ask_follow_up": "POST /api/research/{session_id}/ask",
+        },
+        "engine": {
+            "llm": "Google Gemini",
+            "model": settings.GEMINI_MODEL,
+            "search_provider": settings.SEARCH_PROVIDER,
+            "database": "PostgreSQL (Supabase)" if "postgresql" in settings.DATABASE_URL else "SQLite"
+        }
+    }
 
 # Include Routers
 app.include_router(research.router)
 app.include_router(sessions.router)
 
-@app.get("/api/health")
+@app.get("/api/health", tags=["system"])
 def health_check():
     return {
         "status": "healthy",
         "mock_mode": settings.MOCK_MODE,
         "is_mock_llm": settings.is_mock_llm,
         "is_mock_search": settings.is_mock_search,
-        "search_provider": settings.SEARCH_PROVIDER
+        "search_provider": settings.SEARCH_PROVIDER,
+        "database": "PostgreSQL (Supabase)" if "postgresql" in settings.DATABASE_URL else "SQLite"
     }
