@@ -14,7 +14,7 @@ Before deploying, ensure you have your production environment variables ready:
 
 | Variable | Required | Description | Example |
 |---|---|---|---|
-| `ANTHROPIC_API_KEY` | Optional* | Claude API Key for query planning, synthesis & RAG | `sk-ant-api03-...` |
+| `GEMINI_API_KEY` | Optional* | Google Gemini API Key for query planning, synthesis & RAG | `AIzaSy...` |
 | `SEARCH_API_KEY` | Optional* | Search provider key (Tavily, Serper, or Bing) | `tvly-...` |
 | `SEARCH_PROVIDER` | No | Search provider name (`tavily`, `serper`, `bing`) | `tavily` |
 | `DATABASE_URL` | No | SQLite or PostgreSQL connection string | `sqlite:////app/data/research_assistant.db` |
@@ -48,7 +48,7 @@ This is the cleanest all-in-one setup because it preserves the local vector stor
    cp .env.example .env
    nano .env
    ```
-   Add your `ANTHROPIC_API_KEY`, `SEARCH_API_KEY`, and set `NEXT_PUBLIC_API_URL=http://YOUR_SERVER_IP:8000` (or your domain).
+    Add your `GEMINI_API_KEY`, `SEARCH_API_KEY`, and set `NEXT_PUBLIC_API_URL=http://YOUR_SERVER_IP:8000` (or your domain).
 5. **Launch the stack**:
    ```bash
    docker compose up -d --build
@@ -71,7 +71,7 @@ Railway natively supports monorepos, Dockerfiles, and persistent disks.
    - **Root Directory**: leave as `/` (or `backend`).
    - **Dockerfile Path**: `backend/Dockerfile`.
 5. Under **Variables**, add:
-   - `ANTHROPIC_API_KEY`
+   - `GEMINI_API_KEY`
    - `SEARCH_API_KEY`
    - `SEARCH_PROVIDER` = `tavily`
    - `DATABASE_URL` = `sqlite:////app/data/research_assistant.db`
@@ -101,7 +101,7 @@ Because Next.js is developed by Vercel, deploying the frontend on Vercel provide
    - **Runtime**: Docker
    - **Dockerfile Path**: `backend/Dockerfile`
    - **Context**: `.` (root)
-4. Add Environment Variables: `ANTHROPIC_API_KEY`, `SEARCH_API_KEY`, `SEARCH_PROVIDER`.
+4. Add Environment Variables: `GEMINI_API_KEY`, `SEARCH_API_KEY`, `SEARCH_PROVIDER`.
 5. Add a Disk (Render paid or persistent mount) for `/app/data`.
 6. Deploy and copy your service URL (e.g. `https://research-api.onrender.com`).
 

@@ -36,7 +36,7 @@ Here is the 5-stage pipeline executing behind every research request:
 [ User Prompt ]
        │
        ▼
-1. Query Planning ───────► Claude breaks topic into 3-6 targeted sub-queries
+1. Query Planning ───────► Gemini breaks topic into 3-6 targeted sub-queries
        │
        ▼
 2. Multi-Source Search ──► Parallel searches (Tavily/Serper/Bing) + URL deduplication
@@ -48,7 +48,7 @@ Here is the 5-stage pipeline executing behind every research request:
 4. Local Vector Indexing ─► TF-IDF + Cosine similarity vectors (zero paid infra)
        │
        ▼
-5. Structured Synthesis ──► Claude generates strict JSON report (Consensus, Key Findings,
+5. Structured Synthesis ──► Gemini generates strict JSON report (Consensus, Key Findings,
        │                    Stance Matrix, Evidence, Contradictions, References)
        ▼
 [ Editorial Report & Grounded RAG Chat ]
@@ -72,7 +72,7 @@ Rather than requiring paid Pinecone, Weaviate, or OpenAI embedding infrastructur
 *(If you do want to plug in Pinecone or Weaviate later, the base class `BaseVectorStore` makes it a one-file change).*
 
 ### 5. Structured JSON Synthesis
-The extracted sources are fed to Claude with strict instructions to output structured JSON adhering to an exact schema (Executive Summary, Key Findings, Source Comparison Matrix, Evidence, Contradictions, and Bibliography). This allows the frontend to render distinct, readable components rather than a wall of markdown.
+The extracted sources are fed to Google Gemini with strict instructions to output structured JSON adhering to an exact schema (Executive Summary, Key Findings, Source Comparison Matrix, Evidence, Contradictions, and Bibliography). This allows the frontend to render distinct, readable components rather than a wall of markdown.
 
 ### 6. Real-Time Streaming via Server-Sent Events (SSE)
 Instead of showing a generic loading spinner, the app opens an SSE stream (`/api/research/{session_id}/events`). You see the actual sub-queries being generated, which sources are being read, and the real percentage progress.
@@ -96,7 +96,7 @@ To avoid the generic *"purple gradient AI dashboard"* look, the interface is des
 | **Frontend** | Next.js 14+ (App Router, JavaScript) | Editorial document UI, SSE streaming listener, interactive citation popovers |
 | **Styling** | Tailwind CSS | Custom warm editorial palette & responsive layouts |
 | **Backend** | FastAPI (Python) | Async endpoints, `BackgroundTasks`, and SSE `StreamingResponse` |
-| **LLM** | Anthropic Claude API (`claude-3-5-sonnet-20241022`) | Query planning, report synthesis, and RAG Q&A |
+| **LLM** | Google Gemini API (`gemini-1.5-flash` / `gemini-2.0-flash`) | Query planning, report synthesis, and RAG Q&A |
 | **Search** | Tavily / Serper / Bing | Parallel web search (configurable via `.env`) |
 | **Vector Store** | Local TF-IDF + Cosine Similarity | Lightweight local vector search with no cloud dependencies |
 | **Database** | SQLite via SQLAlchemy | Storing sessions, sources, chunks, and follow-up chat messages |
@@ -119,7 +119,7 @@ cp .env.example .env
 
 Add your API keys in `.env`:
 ```env
-ANTHROPIC_API_KEY=sk-ant-api03-...
+GEMINI_API_KEY=AIzaSy...
 SEARCH_API_KEY=tvly-...
 SEARCH_PROVIDER=tavily
 ```

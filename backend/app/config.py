@@ -9,18 +9,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 class Settings(BaseModel):
     PROJECT_NAME: str = "AI Research Assistant"
-    ANTHROPIC_API_KEY: str = os.getenv("ANTHROPIC_API_KEY", "")
+    # Support GEMINI_API_KEY as primary, with fallback to GOOGLE_API_KEY or legacy ANTHROPIC_API_KEY
+    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY") or os.getenv("ANTHROPIC_API_KEY", "")
     SEARCH_API_KEY: str = os.getenv("SEARCH_API_KEY", "")
     SEARCH_PROVIDER: str = os.getenv("SEARCH_PROVIDER", "tavily").lower()  # "tavily", "serper", "bing", "mock"
     DATABASE_URL: str = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR}/research_assistant.db")
     VECTOR_DB_PATH: str = os.getenv("VECTOR_DB_PATH", str(BASE_DIR / "vector_store"))
     MOCK_MODE: bool = os.getenv("MOCK_MODE", "false").lower() in ("true", "1", "yes")
-    CLAUDE_MODEL: str = os.getenv("CLAUDE_MODEL", "claude-3-5-sonnet-20241022")
+    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
     
     # Auto fallback to mock if no keys are provided
     @property
     def is_mock_llm(self) -> bool:
-        return self.MOCK_MODE or not self.ANTHROPIC_API_KEY or self.ANTHROPIC_API_KEY.startswith("mock_")
+        return self.MOCK_MODE or not self.GEMINI_API_KEY or self.GEMINI_API_KEY.startswith("mock_")
         
     @property
     def is_mock_search(self) -> bool:

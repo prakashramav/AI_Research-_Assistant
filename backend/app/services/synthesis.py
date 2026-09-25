@@ -2,21 +2,25 @@ import json
 import logging
 import re
 from typing import List, Dict, Any, Optional
-from anthropic import AsyncAnthropic
 from backend.app.config import settings
 
 logger = logging.getLogger(__name__)
 
 class SynthesisService:
     def __init__(self):
-        self.api_key = settings.ANTHROPIC_API_KEY
-        self.model = settings.CLAUDE_MODEL
+        self.api_key = settings.GEMINI_API_KEY
+        self.model = settings.GEMINI_MODEL
         self.is_mock = settings.is_mock_llm
 
-    def _get_client(self) -> Optional[AsyncAnthropic]:
+    def _get_client(self):
         if self.is_mock or not self.api_key:
             return None
-        return AsyncAnthropic(api_key=self.api_key)
+        try:
+            from google import genai
+            return genai.Client(api_key=self.api_key)
+        except Exception as e:
+            logger.error(f"Failed to initialize Google GenAI client: {e}")
+            return None
 
     async def plan_queries(self, topic: str) -> List[str]:
         """
@@ -27,6 +31,9 @@ class SynthesisService:
             return self._mock_plan_queries(topic)
 
         client = self._get_client()
+        if not client:
+            return self._mock_plan_queries(topic)
+
         prompt = f"""You are an elite research strategist. 
 The user wants to investigate this topic: "{topic}".
 
@@ -40,13 +47,16 @@ Return ONLY a valid JSON list of strings, e.g. ["query 1", "query 2", "query 3"]
 Do not include any other markdown formatting or text outside the JSON.
 """
         try:
-            response = await client.messages.create(
+            from google.genai import types
+            response = client.models.generate_content(
                 model=self.model,
-                max_tokens=500,
-                messages=[{"role": "user", "content": prompt}]
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    temperature=0.2,
+                    response_mime_type="application/json"
+                )
             )
-            raw = response.content[0].text.strip()
-            # Clean possible markdown fence
+            raw = response.text.strip()
             if raw.startswith("```"):
                 raw = re.sub(r"^```(?:json)?\n?", "", raw)
                 raw = re.sub(r"\n?```$", "", raw)
@@ -54,7 +64,7 @@ Do not include any other markdown formatting or text outside the JSON.
             if isinstance(queries, list) and len(queries) >= 2:
                 return [str(q) for q in queries[:6]]
         except Exception as e:
-            logger.error(f"Error in Claude query planning: {e}. Falling back to default decomposition.")
+            logger.error(f"Error in Gemini query planning: {e}. Falling back to default decomposition.")
         
         return self._mock_plan_queries(topic)
 
@@ -67,6 +77,8 @@ Do not include any other markdown formatting or text outside the JSON.
             return self._mock_synthesize_report(topic, sources)
 
         client = self._get_client()
+        if not client:
+            return self._mock_synthesize_report(topic, sources)
 
         # Build context from extracted sources
         sources_text = ""
@@ -131,22 +143,25 @@ Output ONLY valid JSON matching this exact structure:
 Ensure valid JSON with no extra commentary or markdown fencing.
 """
         try:
-            response = await client.messages.create(
+            from google.genai import types
+            response = client.models.generate_content(
                 model=self.model,
-                max_tokens=3000,
-                messages=[{"role": "user", "content": prompt}]
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    temperature=0.2,
+                    response_mime_type="application/json"
+                )
             )
-            raw = response.content[0].text.strip()
+            raw = response.text.strip()
             if raw.startswith("```"):
                 raw = re.sub(r"^```(?:json)?\n?", "", raw)
                 raw = re.sub(r"\n?```$", "", raw)
             report = json.loads(raw)
             if "executive_summary" in report and "key_findings" in report:
-                # Ensure references match our actual sources if model missed any
                 self._normalize_references(report, sources)
                 return report
         except Exception as e:
-            logger.error(f"Error in Claude report synthesis: {e}. Falling back to structured generation.")
+            logger.error(f"Error in Gemini report synthesis: {e}. Falling back to structured generation.")
 
         return self._mock_synthesize_report(topic, sources)
 
@@ -159,6 +174,8 @@ Ensure valid JSON with no extra commentary or markdown fencing.
             return self._mock_answer_follow_up(question, retrieved_chunks, sources)
 
         client = self._get_client()
+        if not client:
+            return self._mock_answer_follow_up(question, retrieved_chunks, sources)
 
         context_str = ""
         for c in retrieved_chunks:
@@ -186,19 +203,23 @@ Output ONLY valid JSON:
 }}
 """
         try:
-            response = await client.messages.create(
+            from google.genai import types
+            response = client.models.generate_content(
                 model=self.model,
-                max_tokens=1000,
-                messages=[{"role": "user", "content": prompt}]
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    temperature=0.2,
+                    response_mime_type="application/json"
+                )
             )
-            raw = response.content[0].text.strip()
+            raw = response.text.strip()
             if raw.startswith("```"):
                 raw = re.sub(r"^```(?:json)?\n?", "", raw)
                 raw = re.sub(r"\n?```$", "", raw)
             res = json.loads(raw)
             return res
         except Exception as e:
-            logger.error(f"Error answering follow-up with Claude: {e}.")
+            logger.error(f"Error answering follow-up with Gemini: {e}.")
             return self._mock_answer_follow_up(question, retrieved_chunks, sources)
 
     def _normalize_references(self, report: Dict[str, Any], sources: List[Dict[str, Any]]):

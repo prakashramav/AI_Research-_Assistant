@@ -182,7 +182,7 @@ export default function SessionSidebar({ isOpen, onClose }) {
         >
           <span className="flex items-center gap-1">
             <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse" />
-            FastAPI + Claude + RAG
+            FastAPI + Gemini + RAG
           </span>
           <span className="font-mono text-[10px]">v1.0</span>
         </div>
