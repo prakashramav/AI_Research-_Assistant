@@ -41,7 +41,7 @@ class Settings(BaseModel):
     DATABASE_URL: str = sanitize_db_url(os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR}/research_assistant.db"))
     VECTOR_DB_PATH: str = os.getenv("VECTOR_DB_PATH", str(BASE_DIR / "vector_store"))
     MOCK_MODE: bool = os.getenv("MOCK_MODE", "false").lower() in ("true", "1", "yes")
-    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
+    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
     
     # Auto fallback to mock if no keys are provided
     @property

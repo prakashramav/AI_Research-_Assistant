@@ -96,14 +96,17 @@ Because Next.js is developed by Vercel, deploying the frontend on Vercel provide
 
 ### 1. Deploy the Backend to Render:
 1. Go to [render.com](https://render.com) → **New Web Service**.
-2. Connect your repository.
-3. Configure:
-   - **Runtime**: Docker
-   - **Dockerfile Path**: `backend/Dockerfile`
-   - **Context**: `.` (root)
-4. Add Environment Variables: `GEMINI_API_KEY`, `SEARCH_API_KEY`, `SEARCH_PROVIDER`.
-5. Add a Disk (Render paid or persistent mount) for `/app/data`.
-6. Deploy and copy your service URL (e.g. `https://research-api.onrender.com`).
+2. Connect your repository: `https://github.com/prakashramav/AI_Research-_Assistant`.
+3. Configure settings:
+   - **Root Directory**: `backend`
+   - **Runtime**: `Docker`
+   - **Dockerfile Path**: `Dockerfile` (or leave as default)
+4. Add Environment Variables:
+   - `GEMINI_API_KEY`: your Google Gemini API key
+   - `SEARCH_API_KEY`: your Tavily API key
+   - `SEARCH_PROVIDER`: `tavily`
+   - `DATABASE_URL`: your Supabase/PostgreSQL connection string
+5. Click **Deploy Web Service** and copy your backend URL (e.g. `https://research-api.onrender.com`).
 
 ### 2. Deploy the Frontend to Vercel:
 1. Go to [vercel.com](https://vercel.com) → **Add New** → **Project**.

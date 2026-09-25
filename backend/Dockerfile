@@ -8,20 +8,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Install python dependencies
-COPY backend/requirements.txt /app/backend/requirements.txt
-RUN pip install --no-cache-dir -r /app/backend/requirements.txt
+# Install python dependencies (from backend directory context)
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
-# Copy application code
-COPY backend /app/backend
+# Copy application files into /app/backend so backend.app imports resolve cleanly
+COPY . /app/backend
+
+ENV PYTHONPATH=/app
+ENV PYTHONUNBUFFERED=1
+ENV PORT=8000
+ENV DATABASE_URL="sqlite:////app/data/research_assistant.db"
+ENV VECTOR_DB_PATH="/app/vector_store"
 
 # Create directory for persistent vector store and sqlite database
 RUN mkdir -p /app/vector_store /app/data
-
-ENV PYTHONUNBUFFERED=1
-ENV DATABASE_URL="sqlite:////app/data/research_assistant.db"
-ENV VECTOR_DB_PATH="/app/vector_store"
-ENV PORT=8000
 
 EXPOSE 8000
 
