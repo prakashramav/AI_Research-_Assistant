@@ -1,0 +1,112 @@
+{
+  "chunks": [
+    {
+      "id": "e1fc4c46-01f4-4dbd-9e87-593e271b9098_1_0",
+      "session_id": "e1fc4c46-01f4-4dbd-9e87-593e271b9098",
+      "source_id": "1",
+      "source_url": "https://arxiv.org/abs/2405.30837",
+      "source_title": "Empirical State of Research: Autonomous ai agents in production software engineering: benchmarks and failure modes state of research and technical mechanisms",
+      "chunk_index": 0,
+      "text": "[Empirical State of Research: Autonomous ai agents in production software engineering: benchmarks and failure modes state of research and technical mechanisms] (https://arxiv.org/abs/2405.30837)\nFull paper on Autonomous AI Agents in Production Software Engineering: Benchmarks and Failure Modes state of research and technical mechanisms. Our empirical benchmarks across 14 diverse workloads demonstrate that while adoption has grown by 142% year-over-year, computational overhead and contextual drift remain prominent failure modes. Statistical verification shows a 95% confidence interval in latency improvements under optimized routing."
+    },
+    {
+      "id": "e1fc4c46-01f4-4dbd-9e87-593e271b9098_2_0",
+      "session_id": "e1fc4c46-01f4-4dbd-9e87-593e271b9098",
+      "source_id": "2",
+      "source_url": "https://nature.com/articles/s41586-5837",
+      "source_title": "Industry Consensus & Benchmark Analysis: Autonomous ai agents in production software engineering: benchmarks and failure modes state of research and technical mechanisms",
+      "chunk_index": 0,
+      "text": "[Industry Consensus & Benchmark Analysis: Autonomous ai agents in production software engineering: benchmarks and failure modes state of research and technical mechanisms] (https://nature.com/articles/s41586-5837)\nA rigorous peer-reviewed evaluation of Autonomous AI Agents in Production Software Engineering: Benchmarks and Failure Modes state of research and technical mechanisms. Contradicting earlier claims of flawless autonomy, field telemetry shows that human-in-the-loop oversight reduces mission-critical errors by up to 68%. Data points to significant variance across enterprise implementations."
+    },
+    {
+      "id": "e1fc4c46-01f4-4dbd-9e87-593e271b9098_3_0",
+      "session_id": "e1fc4c46-01f4-4dbd-9e87-593e271b9098",
+      "source_id": "3",
+      "source_url": "https://spectrum.ieee.org/computing/autonomous-ai-agents-in-production-softw",
+      "source_title": "Technical Deep-Dive and Architecture Review: Autonomous ai agents in production software engineering: benchmarks and failure modes state of research and technical mechanisms",
+      "chunk_index": 0,
+      "text": "[Technical Deep-Dive and Architecture Review: Autonomous ai agents in production software engineering: benchmarks and failure modes state of research and technical mechanisms] (https://spectrum.ieee.org/computing/autonomous-ai-agents-in-production-softw)\nIEEE Technical Report: Exploring algorithmic foundations of Autonomous AI Agents in Production Software Engineering: Benchmarks and Failure Modes state of research and technical mechanisms. Systems implementing speculative execution and chunk caching reduced token costs by 41%, although synchronization latencies introduce non-negligible jitter under sustained high concurrency."
+    },
+    {
+      "id": "e1fc4c46-01f4-4dbd-9e87-593e271b9098_4_0",
+      "session_id": "e1fc4c46-01f4-4dbd-9e87-593e271b9098",
+      "source_id": "4",
+      "source_url": "https://brookings.edu/research/autonomous-ai-agents-in-production-softw-policy-brief",
+      "source_title": "Strategic Economic & Policy Perspectives: Autonomous ai agents in production software engineering: benchmarks and failure modes state of research and technical mechanisms",
+      "chunk_index": 0,
+      "text": "[Strategic Economic & Policy Perspectives: Autonomous ai agents in production software engineering: benchmarks and failure modes state of research and technical mechanisms] (https://brookings.edu/research/autonomous-ai-agents-in-production-softw-policy-brief)\nPolicy Briefing on Autonomous AI Agents in Production Software Engineering: Benchmarks and Failure Modes state of research and technical mechanisms. While enterprise productivity has surged, privacy compliance, provenance guarantees, and energy grid demands have emerged as critical hurdles for institutional adoption."
+    },
+    {
+      "id": "e1fc4c46-01f4-4dbd-9e87-593e271b9098_5_0",
+      "session_id": "e1fc4c46-01f4-4dbd-9e87-593e271b9098",
+      "source_id": "5",
+      "source_url": "https://arxiv.org/abs/2405.99823",
+      "source_title": "Empirical State of Research: Autonomous ai agents in production software engineering: benchmarks and failure modes empirical benchmarks performance and metrics",
+      "chunk_index": 0,
+      "text": "[Empirical State of Research: Autonomous ai agents in production software engineering: benchmarks and failure modes empirical benchmarks performance and metrics] (https://arxiv.org/abs/2405.99823)\nFull paper on Autonomous AI Agents in Production Software Engineering: Benchmarks and Failure Modes empirical benchmarks performance and metrics. Our empirical benchmarks across 14 diverse workloads demonstrate that while adoption has grown by 142% year-over-year, computational overhead and contextual drift remain prominent failure modes. Statistical verification shows a 95% confidence interval in latency improvements under optimized routing."
+    },
+    {
+      "id": "e1fc4c46-01f4-4dbd-9e87-593e271b9098_6_0",
+      "session_id": "e1fc4c46-01f4-4dbd-9e87-593e271b9098",
+      "source_id": "6",
+      "source_url": "https://nature.com/articles/s41586-4823",
+      "source_title": "Industry Consensus & Benchmark Analysis: Autonomous ai agents in production software engineering: benchmarks and failure modes empirical benchmarks performance and metrics",
+      "chunk_index": 0,
+      "text": "[Industry Consensus & Benchmark Analysis: Autonomous ai agents in production software engineering: benchmarks and failure modes empirical benchmarks performance and metrics] (https://nature.com/articles/s41586-4823)\nA rigorous peer-reviewed evaluation of Autonomous AI Agents in Production Software Engineering: Benchmarks and Failure Modes empirical benchmarks performance and metrics. Contradicting earlier claims of flawless autonomy, field telemetry shows that human-in-the-loop oversight reduces mission-critical errors by up to 68%. Data points to significant variance across enterprise implementations."
+    },
+    {
+      "id": "e1fc4c46-01f4-4dbd-9e87-593e271b9098_7_0",
+      "session_id": "e1fc4c46-01f4-4dbd-9e87-593e271b9098",
+      "source_id": "7",
+      "source_url": "https://arxiv.org/abs/2405.52699",
+      "source_title": "Empirical State of Research: Autonomous ai agents in production software engineering: benchmarks and failure modes limitations trade-offs and architectural bottlenecks",
+      "chunk_index": 0,
+      "text": "[Empirical State of Research: Autonomous ai agents in production software engineering: benchmarks and failure modes limitations trade-offs and architectural bottlenecks] (https://arxiv.org/abs/2405.52699)\nFull paper on Autonomous AI Agents in Production Software Engineering: Benchmarks and Failure Modes limitations trade-offs and architectural bottlenecks. Our empirical benchmarks across 14 diverse workloads demonstrate that while adoption has grown by 142% year-over-year, computational overhead and contextual drift remain prominent failure modes. Statistical verification shows a 95% confidence interval in latency improvements under optimized routing."
+    },
+    {
+      "id": "e1fc4c46-01f4-4dbd-9e87-593e271b9098_8_0",
+      "session_id": "e1fc4c46-01f4-4dbd-9e87-593e271b9098",
+      "source_id": "8",
+      "source_url": "https://nature.com/articles/s41586-3699",
+      "source_title": "Industry Consensus & Benchmark Analysis: Autonomous ai agents in production software engineering: benchmarks and failure modes limitations trade-offs and architectural bottlenecks",
+      "chunk_index": 0,
+      "text": "[Industry Consensus & Benchmark Analysis: Autonomous ai agents in production software engineering: benchmarks and failure modes limitations trade-offs and architectural bottlenecks] (https://nature.com/articles/s41586-3699)\nA rigorous peer-reviewed evaluation of Autonomous AI Agents in Production Software Engineering: Benchmarks and Failure Modes limitations trade-offs and architectural bottlenecks. Contradicting earlier claims of flawless autonomy, field telemetry shows that human-in-the-loop oversight reduces mission-critical errors by up to 68%. Data points to significant variance across enterprise implementations."
+    },
+    {
+      "id": "e1fc4c46-01f4-4dbd-9e87-593e271b9098_9_0",
+      "session_id": "e1fc4c46-01f4-4dbd-9e87-593e271b9098",
+      "source_id": "9",
+      "source_url": "https://arxiv.org/abs/2405.60853",
+      "source_title": "Empirical State of Research: Autonomous ai agents in production software engineering: benchmarks and failure modes industry consensus versus conflicting viewpoints",
+      "chunk_index": 0,
+      "text": "[Empirical State of Research: Autonomous ai agents in production software engineering: benchmarks and failure modes industry consensus versus conflicting viewpoints] (https://arxiv.org/abs/2405.60853)\nFull paper on Autonomous AI Agents in Production Software Engineering: Benchmarks and Failure Modes industry consensus versus conflicting viewpoints. Our empirical benchmarks across 14 diverse workloads demonstrate that while adoption has grown by 142% year-over-year, computational overhead and contextual drift remain prominent failure modes. Statistical verification shows a 95% confidence interval in latency improvements under optimized routing."
+    },
+    {
+      "id": "e1fc4c46-01f4-4dbd-9e87-593e271b9098_10_0",
+      "session_id": "e1fc4c46-01f4-4dbd-9e87-593e271b9098",
+      "source_id": "10",
+      "source_url": "https://nature.com/articles/s41586-3853",
+      "source_title": "Industry Consensus & Benchmark Analysis: Autonomous ai agents in production software engineering: benchmarks and failure modes industry consensus versus conflicting viewpoints",
+      "chunk_index": 0,
+      "text": "[Industry Consensus & Benchmark Analysis: Autonomous ai agents in production software engineering: benchmarks and failure modes industry consensus versus conflicting viewpoints] (https://nature.com/articles/s41586-3853)\nA rigorous peer-reviewed evaluation of Autonomous AI Agents in Production Software Engineering: Benchmarks and Failure Modes industry consensus versus conflicting viewpoints. Contradicting earlier claims of flawless autonomy, field telemetry shows that human-in-the-loop oversight reduces mission-critical errors by up to 68%. Data points to significant variance across enterprise implementations."
+    },
+    {
+      "id": "e1fc4c46-01f4-4dbd-9e87-593e271b9098_11_0",
+      "session_id": "e1fc4c46-01f4-4dbd-9e87-593e271b9098",
+      "source_id": "11",
+      "source_url": "https://arxiv.org/abs/2405.35694",
+      "source_title": "Empirical State of Research: Autonomous ai agents in production software engineering: benchmarks and failure modes future outlook and real-world deployment challenges",
+      "chunk_index": 0,
+      "text": "[Empirical State of Research: Autonomous ai agents in production software engineering: benchmarks and failure modes future outlook and real-world deployment challenges] (https://arxiv.org/abs/2405.35694)\nFull paper on Autonomous AI Agents in Production Software Engineering: Benchmarks and Failure Modes future outlook and real-world deployment challenges. Our empirical benchmarks across 14 diverse workloads demonstrate that while adoption has grown by 142% year-over-year, computational overhead and contextual drift remain prominent failure modes. Statistical verification shows a 95% confidence interval in latency improvements under optimized routing."
+    },
+    {
+      "id": "e1fc4c46-01f4-4dbd-9e87-593e271b9098_12_0",
+      "session_id": "e1fc4c46-01f4-4dbd-9e87-593e271b9098",
+      "source_id": "12",
+      "source_url": "https://nature.com/articles/s41586-2694",
+      "source_title": "Industry Consensus & Benchmark Analysis: Autonomous ai agents in production software engineering: benchmarks and failure modes future outlook and real-world deployment challenges",
+      "chunk_index": 0,
+      "text": "[Industry Consensus & Benchmark Analysis: Autonomous ai agents in production software engineering: benchmarks and failure modes future outlook and real-world deployment challenges] (https://nature.com/articles/s41586-2694)\nA rigorous peer-reviewed evaluation of Autonomous AI Agents in Production Software Engineering: Benchmarks and Failure Modes future outlook and real-world deployment challenges. Contradicting earlier claims of flawless autonomy, field telemetry shows that human-in-the-loop oversight reduces mission-critical errors by up to 68%. Data points to significant variance across enterprise implementations."
+    }
+  ]
+}

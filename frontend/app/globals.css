@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+:root {
+  --bg-canvas: #fbf9f5;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f3efe6;
+  --bg-accent-light: #fef5ee;
+  --text-main: #1c1b18;
+  --text-muted: #6b675e;
+  --text-faint: #9c978c;
+  --border-subtle: #e6e1d5;
+  --border-strong: #c8c2b3;
+  --accent-ink: #b84620;
+  --accent-ink-hover: #9c3614;
+  --accent-subtle: #faebe4;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-canvas: #131312;
+    --bg-surface: #1a1a18;
+    --bg-subtle: #242320;
+    --bg-accent-light: #281d19;
+    --text-main: #eeeae3;
+    --text-muted: #a39e94;
+    --text-faint: #706b62;
+    --border-subtle: #2d2b27;
+    --border-strong: #45423c;
+    --accent-ink: #e0653d;
+    --accent-ink-hover: #f17a54;
+    --accent-subtle: #342119;
+  }
+}
+
+body {
+  background-color: var(--bg-canvas);
+  color: var(--text-main);
+  font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-editorial {
+  font-family: var(--font-lora), Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+/* Custom Citation Superscript Style */
+.citation-sup {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-ink);
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0.1rem 0.3rem;
+  margin: 0 0.15rem;
+  border-radius: 4px;
+  background-color: var(--accent-subtle);
+  cursor: pointer;
+  vertical-align: super;
+  transition: all 0.15s ease-in-out;
+  border: 1px solid transparent;
+  user-select: none;
+}
+
+.citation-sup:hover {
+  border-color: var(--accent-ink);
+  transform: translateY(-1px);
+}
+
+/* Editorial Article Layout */
+.editorial-column {
+  max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Custom quiet scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 3px;
+}
+
+@keyframes pulseSubtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-pulse-subtle {
+  animation: pulseSubtle 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

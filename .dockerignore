@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.git/
+.gitignore
+.env
+research_assistant.db
+vector_store/
+node_modules/
+.next/
